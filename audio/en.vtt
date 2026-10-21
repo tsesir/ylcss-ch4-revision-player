@@ -1,0 +1,148 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:02.202
+Today we revise Chapter Four.
+
+00:00:02.202 --> 00:00:05.088
+Multimedia elements, and digitisation.
+
+00:00:05.088 --> 00:00:09.720
+How images, audio, and video change from analogue to digital.
+
+00:00:10.070 --> 00:00:13.107
+Digitisation has two steps.
+
+00:00:13.107 --> 00:00:14.908
+First, sampling.
+
+00:00:14.908 --> 00:00:17.270
+Second, quantization.
+
+00:00:17.620 --> 00:00:20.068
+Sampling takes discrete amplitude samples
+
+00:00:20.068 --> 00:00:23.112
+from a continuous analogue signal, at a fixed rate.
+
+00:00:23.112 --> 00:00:27.172
+A higher sampling rate means more faithful sound or picture quality.
+
+00:00:27.522 --> 00:00:30.181
+Quantization maps continuous amplitudes
+
+00:00:30.181 --> 00:00:32.566
+onto preset discrete binary levels.
+
+00:00:32.566 --> 00:00:35.634
+Higher bit depth means a finer dynamic range.
+
+00:00:35.984 --> 00:00:40.223
+A sound card uses an A D C to turn analogue into digital,
+
+00:00:40.223 --> 00:00:43.718
+and a D A C to turn digital back into analogue.
+
+00:00:43.718 --> 00:00:47.288
+A digital camera uses a C C D or C M O S sensor.
+
+00:00:47.638 --> 00:00:52.472
+Remember the core idea: digitisation is only a discrete approximation.
+
+00:00:52.472 --> 00:00:54.958
+So there is always information loss.
+
+00:00:55.308 --> 00:00:58.655
+A bitmap is a rectangular grid of colour pixels.
+
+00:00:58.655 --> 00:01:01.932
+Quality depends on resolution and colour depth.
+
+00:01:02.282 --> 00:01:06.159
+When you enlarge a bitmap, it goes jagged and looks distorted.
+
+00:01:06.159 --> 00:01:11.786
+File size in bytes equals width times height times colour depth in bits, divided by eight.
+
+00:01:12.136 --> 00:01:13.851
+Four common formats.
+
+00:01:13.851 --> 00:01:17.108
+B M P: uncompressed, very large files.
+
+00:01:17.108 --> 00:01:20.709
+J P G: lossy compression, good for photos.
+
+00:01:20.709 --> 00:01:25.081
+P N G: lossless compression, supports transparency.
+
+00:01:25.081 --> 00:01:31.768
+G I F: two hundred and fifty-six colours, supports animation and transparency.
+
+00:01:32.118 --> 00:01:35.325
+A vector graphic is defined by maths and paths.
+
+00:01:35.325 --> 00:01:39.282
+It is resolution-independent; it stays sharp at any scale.
+
+00:01:39.282 --> 00:01:43.854
+Files are usually small, but vectors are not suited to real photos.
+
+00:01:44.204 --> 00:01:48.535
+Common formats: S V G, A I, E P S, and W M F.
+
+00:01:48.535 --> 00:01:53.348
+S V G is supported on the web and in H T M L five.
+
+00:01:53.698 --> 00:01:55.842
+Uncompressed image size in megabytes:
+
+00:01:55.842 --> 00:01:58.507
+width times height times colour depth in bits,
+
+00:01:58.507 --> 00:02:03.548
+divided by eight times one thousand and twenty-four times one thousand and twenty-four.
+
+00:02:03.548 --> 00:02:06.850
+After compression, size depends on the compression ratio.
+
+00:02:07.200 --> 00:02:09.283
+Uncompressed audio size in megabytes:
+
+00:02:09.283 --> 00:02:13.561
+channels times bit depth times sampling rate in hertz times time in seconds,
+
+00:02:13.561 --> 00:02:18.458
+divided by eight times one thousand and twenty-four times one thousand and twenty-four.
+
+00:02:18.458 --> 00:02:23.693
+Compressed audio: bit rate in kilobits per second, times one thousand, times time in seconds,
+
+00:02:23.693 --> 00:02:28.872
+then divided by eight times one thousand and twenty-four times one thousand and twenty-four.
+
+00:02:29.222 --> 00:02:31.318
+Uncompressed video size in gigabytes:
+
+00:02:31.318 --> 00:02:36.814
+frame width times frame height times colour depth in bits times frame rate times time in seconds,
+
+00:02:36.814 --> 00:02:40.100
+divided by eight times one thousand and twenty-four cubed.
+
+00:02:40.100 --> 00:02:45.482
+Compressed video: bit rate in megabits per second, times ten to the six, times time in seconds,
+
+00:02:45.482 --> 00:02:51.374
+divided by eight times one thousand and twenty-four times one thousand and twenty-four — unit megabytes.
+
+00:02:51.724 --> 00:02:53.361
+Remember three points.
+
+00:02:53.361 --> 00:02:58.347
+Digitisation: sampling plus quantization — always information loss.
+
+00:02:58.347 --> 00:03:02.216
+Bitmaps go jagged when enlarged; vectors stay sharp.
+
+00:03:02.216 --> 00:03:07.276
+For image, audio, and video, lock in the file-size formula keywords.
