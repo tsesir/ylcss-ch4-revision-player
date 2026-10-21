@@ -1,0 +1,16 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:02.096
+Uncompressed video size in gigabytes:
+
+00:00:02.096 --> 00:00:07.592
+frame width times frame height times colour depth in bits times frame rate times time in seconds,
+
+00:00:07.592 --> 00:00:10.878
+divided by eight times one thousand and twenty-four cubed.
+
+00:00:10.878 --> 00:00:16.260
+Compressed video: bit rate in megabits per second, times ten to the six, times time in seconds,
+
+00:00:16.260 --> 00:00:22.152
+divided by eight times one thousand and twenty-four times one thousand and twenty-four — unit megabytes.

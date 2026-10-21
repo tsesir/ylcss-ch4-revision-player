@@ -1,0 +1,16 @@
+1
+00:00:00,000 --> 00:00:01,637
+Remember three points.
+
+2
+00:00:01,637 --> 00:00:06,623
+Digitisation: sampling plus quantization — always information loss.
+
+3
+00:00:06,623 --> 00:00:10,492
+Bitmaps go jagged when enlarged; vectors stay sharp.
+
+4
+00:00:10,492 --> 00:00:15,552
+For image, audio, and video, lock in the file-size formula keywords.
+

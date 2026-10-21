@@ -1,0 +1,8 @@
+1
+00:00:00,000 --> 00:00:03,877
+When you enlarge a bitmap, it goes jagged and looks distorted.
+
+2
+00:00:03,877 --> 00:00:09,504
+File size in bytes equals width times height times colour depth in bits, divided by eight.
+

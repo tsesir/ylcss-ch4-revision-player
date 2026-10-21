@@ -1,0 +1,12 @@
+1
+00:00:00,000 --> 00:00:02,202
+Today we revise Chapter Four.
+
+2
+00:00:02,202 --> 00:00:05,088
+Multimedia elements, and digitisation.
+
+3
+00:00:05,088 --> 00:00:09,720
+How images, audio, and video change from analogue to digital.
+

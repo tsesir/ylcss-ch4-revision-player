@@ -1,0 +1,12 @@
+1
+00:00:00,000 --> 00:00:04,239
+A sound card uses an A D C to turn analogue into digital,
+
+2
+00:00:04,239 --> 00:00:07,734
+and a D A C to turn digital back into analogue.
+
+3
+00:00:07,734 --> 00:00:11,304
+A digital camera uses a C C D or C M O S sensor.
+

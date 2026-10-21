@@ -1,0 +1,16 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:01.715
+Four common formats.
+
+00:00:01.715 --> 00:00:04.972
+B M P: uncompressed, very large files.
+
+00:00:04.972 --> 00:00:08.573
+J P G: lossy compression, good for photos.
+
+00:00:08.573 --> 00:00:12.945
+P N G: lossless compression, supports transparency.
+
+00:00:12.945 --> 00:00:19.632
+G I F: two hundred and fifty-six colours, supports animation and transparency.

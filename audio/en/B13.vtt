@@ -1,0 +1,16 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:02.083
+Uncompressed audio size in megabytes:
+
+00:00:02.083 --> 00:00:06.361
+channels times bit depth times sampling rate in hertz times time in seconds,
+
+00:00:06.361 --> 00:00:11.258
+divided by eight times one thousand and twenty-four times one thousand and twenty-four.
+
+00:00:11.258 --> 00:00:16.493
+Compressed audio: bit rate in kilobits per second, times one thousand, times time in seconds,
+
+00:00:16.493 --> 00:00:21.672
+then divided by eight times one thousand and twenty-four times one thousand and twenty-four.

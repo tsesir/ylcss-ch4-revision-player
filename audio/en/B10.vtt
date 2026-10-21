@@ -1,0 +1,10 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:03.207
+A vector graphic is defined by maths and paths.
+
+00:00:03.207 --> 00:00:07.164
+It is resolution-independent; it stays sharp at any scale.
+
+00:00:07.164 --> 00:00:11.736
+Files are usually small, but vectors are not suited to real photos.

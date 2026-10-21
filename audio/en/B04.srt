@@ -1,0 +1,12 @@
+1
+00:00:00,000 --> 00:00:02,659
+Quantization maps continuous amplitudes
+
+2
+00:00:02,659 --> 00:00:05,044
+onto preset discrete binary levels.
+
+3
+00:00:05,044 --> 00:00:08,112
+Higher bit depth means a finer dynamic range.
+

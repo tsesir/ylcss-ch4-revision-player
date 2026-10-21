@@ -1,0 +1,16 @@
+1
+00:00:00,000 --> 00:00:02,144
+Uncompressed image size in megabytes:
+
+2
+00:00:02,144 --> 00:00:04,809
+width times height times colour depth in bits,
+
+3
+00:00:04,809 --> 00:00:09,850
+divided by eight times one thousand and twenty-four times one thousand and twenty-four.
+
+4
+00:00:09,850 --> 00:00:13,152
+After compression, size depends on the compression ratio.
+
