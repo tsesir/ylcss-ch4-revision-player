@@ -1,5 +1,5 @@
 /*
- * ui-collapse only. Does not run on the root player.
+ * Root player chrome. The dock is anchored under the top bar.
  *
  * Fullscreen: prefers Element.requestFullscreen (plus webkit prefix) on #playerShell.
  * If the call is missing or rejects — typical on iOS/Safari for a non-video element,

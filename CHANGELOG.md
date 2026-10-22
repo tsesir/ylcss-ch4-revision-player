@@ -1,5 +1,9 @@
 # Changelog
 
+## 正式根目錄採用可收合頂欄
+
+根目錄 `/`（`index.html`、`ch4_revision_player.html`）改用與 `/ui-collapse/` 相同的播放介面。控制列預設收合，由頂欄向下展開，收合時向上縮回。全螢幕同 Safari／iframe 後備（`.is-fs-fallback`）把 1280×720 舞台以同一比例包含在頂欄以下（`min(寬/1280, 高/720)`），標題到字幕一次睇晒，不裁切。粵語、普通話、English、0.5–2 倍速、旁白停頓、字幕開關與小／中／大維持不變。`localStorage` 仍用 `ch4-player-sub-size` 同 `ch4-ui-collapse-dock`。`/ui-collapse/` 轉去根目錄。
+
 ## 全螢幕改為完整包含
 
 `/ui-collapse/` 全螢幕同 Safari 後備唔再 cover 裁切。1280×720 舞台用同一個比例縮放，塞進頂欄以下嘅寬同高（`min(寬/1280, 高/720)`），可以由上到下一次睇晒成個畫面同字幕。根目錄 `/` 冇改。
