@@ -12,6 +12,9 @@ var speed = 1;
 var voWait = 0.5;
 var voiceLang = null;
 var subsOn = true;
+var SUB_SIZE_KEY = "ch4-player-sub-size";
+var DEFAULT_SUB_SIZE = "l";
+var subSize = DEFAULT_SUB_SIZE;
 var cueBook = { yue: {}, cmn: {}, en: {} };
 var scriptCache = {};
 var hudBeat = null;
@@ -420,6 +423,38 @@ function updateWaitPresets() {
   });
 }
 
+function normalizeSubSize(value) {
+  if (value === "s" || value === "m" || value === "l") return value;
+  return DEFAULT_SUB_SIZE;
+}
+
+function readSubSize() {
+  try {
+    return normalizeSubSize(localStorage.getItem(SUB_SIZE_KEY));
+  } catch (err) {
+    return DEFAULT_SUB_SIZE;
+  }
+}
+
+function updateSubSizeButtons() {
+  document.querySelectorAll("button[data-sub-size]").forEach(function (btn) {
+    var on = btn.getAttribute("data-sub-size") === subSize;
+    btn.classList.toggle("is-on", on);
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+}
+
+function applySubSize(value, persist) {
+  subSize = normalizeSubSize(value);
+  document.documentElement.setAttribute("data-sub-size", subSize);
+  if (stage) stage.setAttribute("data-sub-size", subSize);
+  updateSubSizeButtons();
+  if (!persist) return;
+  try {
+    localStorage.setItem(SUB_SIZE_KEY, subSize);
+  } catch (err) {}
+}
+
 function setSpeed(value) {
   speed = clamp(Number(value), 0.5, 2);
   speedSlider.value = String(speed);
@@ -623,6 +658,11 @@ function bind() {
     btn.classList.toggle("is-on", subsOn);
     btn.textContent = subsOn ? "字幕開" : "字幕關";
   });
+  document.querySelectorAll("button[data-sub-size]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      applySubSize(btn.getAttribute("data-sub-size"), true);
+    });
+  });
   document.querySelectorAll("[data-lang]").forEach(function (btn) {
     btn.addEventListener("click", function () {
       if (btn.disabled) return;
@@ -694,6 +734,8 @@ function expose() {
     setSpeed: setSpeed,
     setVoWait: setVoWait,
     setVoice: setVoice,
+    setSubSize: function (value) { applySubSize(value, true); },
+    getSubSize: function () { return subSize; },
     getLayout: function () { return layout; },
     getVoiceState: function () { return audioMeta; }
   };
@@ -726,6 +768,7 @@ function init() {
     return;
   }
   bind();
+  applySubSize(readSubSize(), false);
   expose();
   seedPack();
   try {

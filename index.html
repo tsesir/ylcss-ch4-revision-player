@@ -3,6 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    (function () {
+      var size = "l";
+      try {
+        var saved = localStorage.getItem("ch4-player-sub-size");
+        if (saved === "s" || saved === "m" || saved === "l") size = saved;
+      } catch (err) {}
+      document.documentElement.setAttribute("data-sub-size", size);
+    })();
+  </script>
   <title>第4章 多媒體元素及數碼化 · 純播放複習</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -54,6 +64,12 @@
         <button type="button" class="ctrl" data-lang="cmn" data-testid="lang-cmn" aria-pressed="false">普通話 <small class="track-state">已就緒</small></button>
         <button type="button" class="ctrl" data-lang="en" data-testid="lang-en" aria-pressed="false">English <small class="track-state">已就緒</small></button>
         <button type="button" class="ctrl is-on" id="subsBtn" data-testid="subs" aria-pressed="true">字幕開</button>
+        <div class="sub-size-group" role="group" aria-label="字幕大小">
+          <span class="field-label">大小</span>
+          <button type="button" class="ctrl" data-sub-size="s" data-testid="sub-size-s" aria-pressed="false">小</button>
+          <button type="button" class="ctrl" data-sub-size="m" data-testid="sub-size-m" aria-pressed="false">中</button>
+          <button type="button" class="ctrl" data-sub-size="l" data-testid="sub-size-l" aria-pressed="true">大</button>
+        </div>
       </div>
 
       <div class="dock-row">
