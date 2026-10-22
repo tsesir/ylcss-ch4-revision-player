@@ -39,6 +39,8 @@ var clock;
 var beatIdEl;
 var playBtn;
 var pauseBtn;
+var stagePlayBtn;
+var stageReplayBtn;
 var statusEl;
 var speedSlider;
 var speedReadout;
@@ -289,6 +291,17 @@ function renderHud() {
   pauseBtn.disabled = !playing;
   playBtn.classList.toggle("primary", !playing);
   pauseBtn.classList.toggle("primary", playing);
+  syncTransportOverlays(playing, t, dur);
+}
+
+function syncTransportOverlays(playing, t, dur) {
+  if (!stagePlayBtn || !stageReplayBtn) return;
+  var atEnd = dur > 0 && t >= dur - 0.05;
+  var atStart = t <= 0.05;
+  var showReplay = !playing && atEnd;
+  var showPlay = !playing && atStart && !showReplay;
+  stagePlayBtn.hidden = !showPlay;
+  stageReplayBtn.hidden = !showReplay;
 }
 
 function parkTime(audio, seconds) {
@@ -633,6 +646,8 @@ function fitStage() {
 function bind() {
   playBtn.addEventListener("click", play);
   pauseBtn.addEventListener("click", pause);
+  if (stagePlayBtn) stagePlayBtn.addEventListener("click", replay);
+  if (stageReplayBtn) stageReplayBtn.addEventListener("click", replay);
   document.getElementById("prevBtn").addEventListener("click", prev);
   document.getElementById("nextBtn").addEventListener("click", function () {
     seekBeat(itemAt(master.time()).index + 1);
@@ -754,6 +769,8 @@ function cacheDom() {
   beatIdEl = document.getElementById("beatId");
   playBtn = document.getElementById("playBtn");
   pauseBtn = document.getElementById("pauseBtn");
+  stagePlayBtn = document.getElementById("stagePlay");
+  stageReplayBtn = document.getElementById("stageReplay");
   statusEl = document.getElementById("status");
   speedSlider = document.getElementById("speedSlider");
   speedReadout = document.getElementById("speedReadout");
