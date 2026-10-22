@@ -6,6 +6,11 @@
  * and inside an iframe without allow="fullscreen" — add .is-fs-fallback so the shell
  * fills the visual viewport, and show a short status hint. Leave with the same
  * button or Escape. Native fullscreen still leaves with Escape or the button.
+ *
+ * While maximized, the 1280×720 stage is cover-scaled with one uniform
+ * transform (scale may exceed 1) so the card fills the shell on both axes.
+ * Horizontal crop keeps the left edge (titles). Collapsed controls sit in
+ * the bottom-left safe corner, and the subtitle bar is inset past them.
  */
 (function () {
   var shell = document.getElementById("playerShell");
@@ -45,25 +50,116 @@
     refit();
   }
 
-  function fitMaximized() {
-    var slot = document.getElementById("stageSlot");
-    var scaleWrap = document.getElementById("stageScale");
-    var stage = document.getElementById("stage");
-    var bar = document.getElementById("chromeBar");
-    if (!slot || !scaleWrap || !stage || !bar) return;
-    var styles = window.getComputedStyle(shell);
-    var padY = (parseFloat(styles.paddingTop) || 0) + (parseFloat(styles.paddingBottom) || 0);
-    var used = padY + bar.offsetHeight + 10;
-    var dockOpen = document.documentElement.classList.contains("dock-open");
-    if (dockOpen) used += dock.offsetHeight + 16;
-    var availW = slot.clientWidth;
-    var availH = shell.clientHeight - used;
-    if (!(availH > 80)) availH = 80;
-    var scale = Math.min(1, availW / 1280, availH / 720);
+  function stageNodes() {
+    return {
+      slot: document.getElementById("stageSlot"),
+      scaleWrap: document.getElementById("stageScale"),
+      stage: document.getElementById("stage"),
+      bar: document.getElementById("chromeBar")
+    };
+  }
+
+  function clearFitInline() {
+    var nodes = stageNodes();
+    var slot = nodes.slot;
+    var scaleWrap = nodes.scaleWrap;
+    var stage = nodes.stage;
+    if (slot) {
+      slot.style.position = "";
+      slot.style.top = "";
+      slot.style.right = "";
+      slot.style.bottom = "";
+      slot.style.left = "";
+      slot.style.width = "";
+      slot.style.height = "";
+      slot.style.maxWidth = "";
+      slot.style.margin = "";
+      slot.style.overflow = "";
+      slot.style.zIndex = "";
+    }
+    if (stage) {
+      stage.style.left = "";
+      stage.style.top = "";
+      stage.style.removeProperty("--fs-sub-inset");
+    }
+    if (scaleWrap) {
+      scaleWrap.style.overflow = "";
+      scaleWrap.style.margin = "";
+    }
+    shell.style.removeProperty("--fs-dock-h");
+    shell.style.removeProperty("--fs-scale");
+  }
+
+  function fitContainedWidth() {
+    var nodes = stageNodes();
+    if (!nodes.slot || !nodes.scaleWrap || !nodes.stage) return;
+    var scale = Math.min(1, nodes.slot.clientWidth / 1280);
     if (!(scale > 0)) scale = 1;
+    nodes.stage.style.transformOrigin = "top left";
+    nodes.stage.style.transform = "scale(" + scale + ")";
+    nodes.scaleWrap.style.width = (1280 * scale) + "px";
+    nodes.scaleWrap.style.height = (720 * scale) + "px";
+  }
+
+  function restoreNormalFit() {
+    clearFitInline();
+    fitContainedWidth();
+  }
+
+  function fitMaximized() {
+    var nodes = stageNodes();
+    var slot = nodes.slot;
+    var scaleWrap = nodes.scaleWrap;
+    var stage = nodes.stage;
+    var bar = nodes.bar;
+    if (!slot || !scaleWrap || !stage || !bar) return;
+    var dockOpen = document.documentElement.classList.contains("dock-open");
+    var dockH = dockOpen ? dock.offsetHeight : 0;
+    var barH = bar.offsetHeight || 44;
+    shell.style.setProperty("--fs-dock-h", dockH + "px");
+
+    slot.style.position = "absolute";
+    slot.style.top = "0";
+    slot.style.right = "0";
+    slot.style.left = "0";
+    slot.style.width = "auto";
+    slot.style.height = "auto";
+    slot.style.maxWidth = "none";
+    slot.style.margin = "0";
+    slot.style.overflow = "hidden";
+    slot.style.zIndex = "1";
+    slot.style.bottom = dockOpen ? (dockH + barH) + "px" : "0";
+
+    var availW = slot.clientWidth;
+    var availH = slot.clientHeight;
+    if (!(availW > 8) || !(availH > 8)) return;
+    var scale = Math.max(availW / 1280, availH / 720);
+    if (!(scale > 0) || !isFinite(scale)) return;
+
+    var visualW = 1280 * scale;
+    var visualH = 720 * scale;
+    var offsetX = 0;
+    var offsetY = (availH - visualH) / 2;
+
+    stage.style.transformOrigin = "top left";
     stage.style.transform = "scale(" + scale + ")";
-    scaleWrap.style.width = (1280 * scale) + "px";
-    scaleWrap.style.height = (720 * scale) + "px";
+    stage.style.left = offsetX + "px";
+    stage.style.top = offsetY + "px";
+    scaleWrap.style.width = availW + "px";
+    scaleWrap.style.height = availH + "px";
+    scaleWrap.style.margin = "0";
+    scaleWrap.style.overflow = "hidden";
+    shell.style.setProperty("--fs-scale", String(scale));
+
+    if (!dockOpen) {
+      var slotRect = slot.getBoundingClientRect();
+      var barRect = bar.getBoundingClientRect();
+      var designLeft = (barRect.right - slotRect.left - offsetX) / scale + 10;
+      if (!(designLeft > 22)) designLeft = 22;
+      stage.style.setProperty("--fs-sub-inset", designLeft + "px");
+    } else {
+      stage.style.removeProperty("--fs-sub-inset");
+    }
   }
 
   function refit() {
@@ -76,6 +172,7 @@
 
   window.addEventListener("resize", function () {
     if (isMaximized()) fitMaximized();
+    else restoreNormalFit();
   });
 
   function showHint(text) {
@@ -151,6 +248,7 @@
     var pending = exitNative();
     stopFallback();
     syncFsUi();
+    restoreNormalFit();
     refit();
     if (pending && typeof pending.catch === "function") pending.catch(function () {});
   }

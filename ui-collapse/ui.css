@@ -27,13 +27,14 @@ html.dock-open .when-collapsed {
 
 .player-shell:fullscreen,
 .player-shell:-webkit-full-screen {
+  position: relative;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
   margin: 0;
-  padding: 12px 12px 20px;
+  padding: 0;
   background: #111;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .player-shell.is-fs-fallback {
@@ -45,9 +46,9 @@ html.dock-open .when-collapsed {
   height: 100%;
   height: 100dvh;
   margin: 0;
-  padding: 12px 12px 20px;
+  padding: 0;
   background: #111;
-  overflow: auto;
+  overflow: hidden;
 }
 
 html.fs-lock,
@@ -56,13 +57,82 @@ html.fs-lock body {
   height: 100%;
 }
 
+.player-shell:fullscreen .stage-slot,
+.player-shell:-webkit-full-screen .stage-slot,
+.player-shell.is-fs-fallback .stage-slot {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: auto;
+  max-width: none;
+  height: auto;
+  margin: 0;
+  overflow: hidden;
+  background: #f7f4ee;
+}
+
+.player-shell:fullscreen .stage,
+.player-shell:-webkit-full-screen .stage,
+.player-shell.is-fs-fallback .stage {
+  border-radius: 0;
+  border-width: 0;
+  box-shadow: none;
+}
+
+.player-shell:fullscreen .sub-wrap,
+.player-shell:-webkit-full-screen .sub-wrap,
+.player-shell.is-fs-fallback .sub-wrap {
+  left: max(22px, var(--fs-sub-inset, 22px));
+}
+
 .player-shell:fullscreen .chrome-bar,
 .player-shell:-webkit-full-screen .chrome-bar,
-.player-shell.is-fs-fallback .chrome-bar,
+.player-shell.is-fs-fallback .chrome-bar {
+  position: absolute;
+  z-index: 30;
+  left: max(10px, env(safe-area-inset-left));
+  bottom: max(10px, env(safe-area-inset-bottom));
+  width: auto;
+  max-width: calc(100% - 20px);
+  margin: 0;
+}
+
+html.dock-open .player-shell:fullscreen .chrome-bar,
+html.dock-open .player-shell:-webkit-full-screen .chrome-bar,
+html.dock-open .player-shell.is-fs-fallback .chrome-bar {
+  left: 0;
+  right: 0;
+  bottom: var(--fs-dock-h, 0px);
+  width: auto;
+  max-width: none;
+  padding: 8px 10px;
+  background: #fffefb;
+  border-top: 3px solid #141414;
+}
+
 .player-shell:fullscreen .dock,
 .player-shell:-webkit-full-screen .dock,
 .player-shell.is-fs-fallback .dock {
-  width: min(1280px, 100%);
+  position: absolute;
+  z-index: 28;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  max-width: none;
+  max-height: 46vh;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+.player-shell:fullscreen .fs-hint,
+.player-shell:-webkit-full-screen .fs-hint,
+.player-shell.is-fs-fallback .fs-hint {
+  top: max(12px, env(safe-area-inset-top));
+  bottom: auto;
 }
 
 .fs-hint {
