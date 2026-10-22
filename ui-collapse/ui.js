@@ -7,10 +7,10 @@
  * fills the visual viewport, and show a short status hint. Leave with the same
  * button or Escape. Native fullscreen still leaves with Escape or the button.
  *
- * While maximized, the 1280×720 stage is cover-scaled with one uniform
- * transform (scale may exceed 1) so the card fills the shell on both axes.
- * Horizontal crop keeps the left edge (titles). Collapsed controls sit in
- * the bottom-left safe corner, and the subtitle bar is inset past them.
+ * While maximized, the 1280×720 stage is cover-scaled (scale may exceed 1)
+ * into the space under the top control dock, so the card fills that viewport
+ * on both axes. The dock is anchored at the top: it opens downward and
+ * collapses back up toward the top edge.
  */
 (function () {
   var shell = document.getElementById("playerShell");
@@ -44,8 +44,9 @@
   function applyDock(open, persist) {
     document.documentElement.classList.toggle("dock-open", open);
     toggle.setAttribute("aria-expanded", open ? "true" : "false");
-    if (open) dock.removeAttribute("hidden");
-    else dock.setAttribute("hidden", "");
+    dock.setAttribute("aria-hidden", open ? "false" : "true");
+    if (open) dock.removeAttribute("inert");
+    else dock.setAttribute("inert", "");
     if (persist) persistDock(open);
     refit();
   }
@@ -106,59 +107,39 @@
     fitContainedWidth();
   }
 
+  var fitting = false;
+
   function fitMaximized() {
-    var nodes = stageNodes();
-    var slot = nodes.slot;
-    var scaleWrap = nodes.scaleWrap;
-    var stage = nodes.stage;
-    var bar = nodes.bar;
-    if (!slot || !scaleWrap || !stage || !bar) return;
-    var dockOpen = document.documentElement.classList.contains("dock-open");
-    var dockH = dockOpen ? dock.offsetHeight : 0;
-    var barH = bar.offsetHeight || 44;
-    shell.style.setProperty("--fs-dock-h", dockH + "px");
+    if (fitting) return false;
+    fitting = true;
+    try {
+      clearFitInline();
+      var nodes = stageNodes();
+      var slot = nodes.slot;
+      var scaleWrap = nodes.scaleWrap;
+      var stage = nodes.stage;
+      if (!slot || !scaleWrap || !stage) return false;
+      var availW = slot.clientWidth;
+      var availH = slot.clientHeight;
+      if (!(availW > 8) || !(availH > 8)) return false;
+      var scale = Math.max(availW / 1280, availH / 720);
+      if (!(scale > 0) || !isFinite(scale)) return false;
 
-    slot.style.position = "absolute";
-    slot.style.top = "0";
-    slot.style.right = "0";
-    slot.style.left = "0";
-    slot.style.width = "auto";
-    slot.style.height = "auto";
-    slot.style.maxWidth = "none";
-    slot.style.margin = "0";
-    slot.style.overflow = "hidden";
-    slot.style.zIndex = "1";
-    slot.style.bottom = dockOpen ? (dockH + barH) + "px" : "0";
-
-    var availW = slot.clientWidth;
-    var availH = slot.clientHeight;
-    if (!(availW > 8) || !(availH > 8)) return;
-    var scale = Math.max(availW / 1280, availH / 720);
-    if (!(scale > 0) || !isFinite(scale)) return;
-
-    var visualW = 1280 * scale;
-    var visualH = 720 * scale;
-    var offsetX = 0;
-    var offsetY = (availH - visualH) / 2;
-
-    stage.style.transformOrigin = "top left";
-    stage.style.transform = "scale(" + scale + ")";
-    stage.style.left = offsetX + "px";
-    stage.style.top = offsetY + "px";
-    scaleWrap.style.width = availW + "px";
-    scaleWrap.style.height = availH + "px";
-    scaleWrap.style.margin = "0";
-    scaleWrap.style.overflow = "hidden";
-    shell.style.setProperty("--fs-scale", String(scale));
-
-    if (!dockOpen) {
-      var slotRect = slot.getBoundingClientRect();
-      var barRect = bar.getBoundingClientRect();
-      var designLeft = (barRect.right - slotRect.left - offsetX) / scale + 10;
-      if (!(designLeft > 22)) designLeft = 22;
-      stage.style.setProperty("--fs-sub-inset", designLeft + "px");
-    } else {
+      var visualH = 720 * scale;
+      var offsetY = (availH - visualH) / 2;
+      stage.style.transformOrigin = "top left";
+      stage.style.transform = "scale(" + scale + ")";
+      stage.style.left = "0px";
+      stage.style.top = offsetY + "px";
       stage.style.removeProperty("--fs-sub-inset");
+      scaleWrap.style.width = availW + "px";
+      scaleWrap.style.height = availH + "px";
+      scaleWrap.style.margin = "0";
+      scaleWrap.style.overflow = "hidden";
+      shell.style.setProperty("--fs-scale", String(scale));
+      return true;
+    } finally {
+      fitting = false;
     }
   }
 
@@ -282,6 +263,22 @@
     hint.addEventListener("click", function () {
       hint.hidden = true;
     });
+  }
+
+  var stageSlotEl = document.getElementById("stageSlot");
+  if (window.ResizeObserver && stageSlotEl) {
+    var seenW = 0;
+    var seenH = 0;
+    var slotObserver = new ResizeObserver(function () {
+      if (!isMaximized()) return;
+      var w = stageSlotEl.clientWidth;
+      var h = stageSlotEl.clientHeight;
+      if (w === seenW && h === seenH) return;
+      if (!fitMaximized()) return;
+      seenW = stageSlotEl.clientWidth;
+      seenH = stageSlotEl.clientHeight;
+    });
+    slotObserver.observe(stageSlotEl);
   }
 
   applyDock(document.documentElement.classList.contains("dock-open"), false);
