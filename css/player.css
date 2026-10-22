@@ -80,6 +80,11 @@ button, input { font-family: inherit; }
   border-radius: 28px;
   box-shadow: var(--dock-shadow);
   overflow: hidden;
+  touch-action: manipulation;
+}
+
+.stage.is-tappable {
+  cursor: pointer;
 }
 
 .blob {
@@ -1142,4 +1147,57 @@ html.fs-lock body {
 
 .transport-overlay[hidden] {
   display: none !important;
+}
+
+.stage-pause-hint {
+  position: absolute;
+  z-index: 7;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  padding: 16px 28px 18px;
+  border: 4px solid var(--ink);
+  border-radius: 24px;
+  background: rgba(20, 20, 20, 0.92);
+  color: #fff;
+  box-shadow: 8px 8px 0 var(--lime);
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: stage-pause-in 0.18s ease-out both;
+}
+
+.stage-pause-bars {
+  width: 32px;
+  height: 42px;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.stage-pause-bars::before,
+.stage-pause-bars::after {
+  content: "";
+  background: var(--lime);
+  border-radius: 4px;
+}
+
+.stage-pause-hint[hidden] {
+  display: none !important;
+}
+
+@keyframes stage-pause-in {
+  from { opacity: 0; transform: translate(-50%, -42%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage-pause-hint { animation: none; }
 }

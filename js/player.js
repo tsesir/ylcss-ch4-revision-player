@@ -41,6 +41,10 @@ var playBtn;
 var pauseBtn;
 var stagePlayBtn;
 var stageReplayBtn;
+var stagePauseHint;
+var pausedByStageTap = false;
+var stageTap = null;
+var suppressStageClick = false;
 var statusEl;
 var speedSlider;
 var speedReadout;
@@ -302,6 +306,44 @@ function syncTransportOverlays(playing, t, dur) {
   var showPlay = !playing && atStart && !showReplay;
   stagePlayBtn.hidden = !showPlay;
   stageReplayBtn.hidden = !showReplay;
+  syncStageTap(playing, t, dur);
+}
+
+function syncStageTap(playing, t, dur) {
+  var atEnd = dur > 0 && t >= dur - 0.05;
+  var atStart = t <= 0.05;
+  if (playing || atEnd || atStart) pausedByStageTap = false;
+  var showHint = !!(pausedByStageTap && !playing);
+  if (stage) stage.classList.toggle("is-tappable", !!(playing || (!atStart && !atEnd)));
+  if (!stagePauseHint) return;
+  if (showHint) {
+    if (stagePauseHint.hidden) stagePauseHint.hidden = false;
+  } else if (!stagePauseHint.hidden) {
+    stagePauseHint.hidden = true;
+  }
+}
+
+function stageTapInteractive(target) {
+  return !!(target && target.closest && target.closest("button, a, input, textarea, select, label"));
+}
+
+// Mid-playback only. Play / Replay and any real control keep the click.
+// A finger that moves more than 16px is a drag, not a tap.
+function toggleFromStageTap() {
+  if (!master) return;
+  var t = master.time();
+  var dur = master.duration() || 0;
+  var playing = !!(master.isActive() && t < dur - 0.02);
+  if (playing) {
+    pausedByStageTap = true;
+    pause();
+    return;
+  }
+  var atEnd = dur > 0 && t >= dur - 0.05;
+  var atStart = t <= 0.05;
+  if (atEnd || atStart) return;
+  pausedByStageTap = false;
+  play();
 }
 
 function parkTime(audio, seconds) {
@@ -648,6 +690,45 @@ function bind() {
   pauseBtn.addEventListener("click", pause);
   if (stagePlayBtn) stagePlayBtn.addEventListener("click", replay);
   if (stageReplayBtn) stageReplayBtn.addEventListener("click", replay);
+  if (stage) {
+    stage.addEventListener("pointerdown", function (event) {
+      if (!event.isPrimary) return;
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      suppressStageClick = false;
+      stageTap = {
+        id: event.pointerId,
+        x: event.clientX,
+        y: event.clientY,
+        dragged: false,
+        interactive: stageTapInteractive(event.target)
+      };
+    });
+    window.addEventListener("pointermove", function (event) {
+      if (!stageTap || event.pointerId !== stageTap.id) return;
+      var dx = event.clientX - stageTap.x;
+      var dy = event.clientY - stageTap.y;
+      if (dx * dx + dy * dy > 16 * 16) stageTap.dragged = true;
+    }, { passive: true });
+    function endStagePointer(event) {
+      if (!stageTap || event.pointerId !== stageTap.id) return;
+      if (stageTap.dragged || stageTap.interactive) suppressStageClick = true;
+    }
+    window.addEventListener("pointerup", endStagePointer);
+    window.addEventListener("pointercancel", function (event) {
+      if (!stageTap || event.pointerId !== stageTap.id) return;
+      stageTap.dragged = true;
+      suppressStageClick = true;
+    });
+    stage.addEventListener("click", function (event) {
+      var tap = stageTap;
+      var dragged = suppressStageClick || (tap && tap.dragged);
+      stageTap = null;
+      suppressStageClick = false;
+      if (stageTapInteractive(event.target)) return;
+      if (dragged) return;
+      toggleFromStageTap();
+    });
+  }
   document.getElementById("prevBtn").addEventListener("click", prev);
   document.getElementById("nextBtn").addEventListener("click", function () {
     seekBeat(itemAt(master.time()).index + 1);
@@ -771,6 +852,7 @@ function cacheDom() {
   pauseBtn = document.getElementById("pauseBtn");
   stagePlayBtn = document.getElementById("stagePlay");
   stageReplayBtn = document.getElementById("stageReplay");
+  stagePauseHint = document.getElementById("stagePauseHint");
   statusEl = document.getElementById("status");
   speedSlider = document.getElementById("speedSlider");
   speedReadout = document.getElementById("speedReadout");
