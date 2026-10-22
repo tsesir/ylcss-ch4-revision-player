@@ -1,5 +1,14 @@
 # Changelog
 
+## 另一路徑：可收合控制列與全螢幕
+
+`/ui-collapse/` 係另一套畫面。根目錄 `/`（`index.html`、`css/player.css`、`js/player.js`）行為不變：控制列仍然一路展開，沒有全螢幕按鈕。
+
+- 載入時控制列預設收合，舞台下只留「展開控制」同「全螢幕」。再按一下變「收合控制」，語速、聲線、字幕開關、字幕大小、播放列同旁白停頓會再出現。
+- 收合狀態會記在 `localStorage` 鍵 `ch4-ui-collapse-dock`（`open` 或 `collapsed`）。第一次沒有紀錄，所以係收合。
+- 「全螢幕」對播放器外殼 `#playerShell` 呼叫 Fullscreen API（含 `webkitRequestFullscreen`）。成功後按鈕變「離開全螢幕」；再按或按 Esc 退出。
+- **Safari／iOS 後備：** 非 video 元素喺 iOS Safari 上，`requestFullscreen` 好多時唔存在或會拒絕；內嵌 iframe 如果冇 `allow="fullscreen"` 都會失敗。失敗時加上 `.is-fs-fallback`，外殼用 `position: fixed` 填滿視窗（`100dvh`），並顯示約 4.5 秒提示：「此瀏覽器未能使用系統全螢幕，已改為填滿畫面。」再按「離開全螢幕」或 Esc 還原。Chromium 走系統全螢幕，唔會出呢句。
+
 ## 放大動畫內容字級
 
 手機直向先看教學內容。舞台仍是 1280×720 再縮放；這次只加大場景裡的教學文字，並收緊留白。字幕「小／中／大」、`localStorage` 鍵 `ch4-player-sub-size` 與預設「大」（40px）維持不變。

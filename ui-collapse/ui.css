@@ -1,0 +1,91 @@
+/* Alt path only. Root player.css is unchanged. */
+
+html:not(.dock-open) #controlDock {
+  display: none !important;
+}
+
+html:not(.dock-open) .when-open {
+  display: none;
+}
+
+html.dock-open .when-collapsed {
+  display: none;
+}
+
+.chrome-bar {
+  width: min(1280px, 100%);
+  margin: 10px auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.chrome-bar .ctrl {
+  min-height: 44px;
+}
+
+.player-shell:fullscreen,
+.player-shell:-webkit-full-screen {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 12px 12px 20px;
+  background: #111;
+  overflow: auto;
+}
+
+.player-shell.is-fs-fallback {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  margin: 0;
+  padding: 12px 12px 20px;
+  background: #111;
+  overflow: auto;
+}
+
+html.fs-lock,
+html.fs-lock body {
+  overflow: hidden;
+  height: 100%;
+}
+
+.player-shell:fullscreen .chrome-bar,
+.player-shell:-webkit-full-screen .chrome-bar,
+.player-shell.is-fs-fallback .chrome-bar,
+.player-shell:fullscreen .dock,
+.player-shell:-webkit-full-screen .dock,
+.player-shell.is-fs-fallback .dock {
+  width: min(1280px, 100%);
+}
+
+.fs-hint {
+  position: fixed;
+  z-index: 60;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: min(520px, calc(100% - 24px));
+  margin: 0;
+  padding: 10px 14px;
+  background: #141414;
+  color: #fff;
+  border: 3px solid #d6ff3f;
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 #d6ff3f;
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.fs-hint[hidden] {
+  display: none !important;
+}
