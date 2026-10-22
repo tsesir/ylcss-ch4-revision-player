@@ -7,10 +7,10 @@
  * fills the visual viewport, and show a short status hint. Leave with the same
  * button or Escape. Native fullscreen still leaves with Escape or the button.
  *
- * While maximized, the 1280×720 stage is cover-scaled (scale may exceed 1)
- * into the space under the top control dock, so the card fills that viewport
- * on both axes. The dock is anchored at the top: it opens downward and
- * collapses back up toward the top edge.
+ * While maximized, the 1280×720 stage is uniformly contain-scaled
+ * (scale = min(slotW/1280, slotH/720), may exceed 1) so the whole scene,
+ * including the subtitle, stays inside the area under the top bar.
+ * Nothing is crop-zoomed. The dock stays anchored at the top.
  */
 (function () {
   var shell = document.getElementById("playerShell");
@@ -122,15 +122,15 @@
       var availW = slot.clientWidth;
       var availH = slot.clientHeight;
       if (!(availW > 8) || !(availH > 8)) return false;
-      var scale = Math.max(availW / 1280, availH / 720);
+      var scale = Math.min(availW / 1280, availH / 720);
       if (!(scale > 0) || !isFinite(scale)) return false;
 
-      var visualH = 720 * scale;
-      var offsetY = (availH - visualH) / 2;
+      var visualW = 1280 * scale;
+      var offsetX = (availW - visualW) / 2;
       stage.style.transformOrigin = "top left";
       stage.style.transform = "scale(" + scale + ")";
-      stage.style.left = "0px";
-      stage.style.top = offsetY + "px";
+      stage.style.left = offsetX + "px";
+      stage.style.top = "0px";
       stage.style.removeProperty("--fs-sub-inset");
       scaleWrap.style.width = availW + "px";
       scaleWrap.style.height = availH + "px";
